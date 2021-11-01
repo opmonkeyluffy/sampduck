@@ -243,7 +243,7 @@ Show_InventoryWeapons(playerid, type = 0) {
 				}
                 else format(szDialog, sizeof szDialog, "%sTrong\n", szDialog);
 				if(i == INV_MAX_WEAPON_AMOUNT-1) {
-					strcat(szDialog, "Cat het sung vao");
+					strcat(szDialog, "Cat het vu khi");
 				}
 			}
             ShowPlayerDialog(playerid, INV_WEP, DIALOG_STYLE_TABLIST_HEADERS, "Tui Do Vu khi", szDialog, "Chon", "Huy");
@@ -1343,8 +1343,9 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					SendClientMessage(playerid, -1, string);
                     DeletePVar(playerid, "InvWepSlot");
 				}
-				case 1: { // hidden
-                    SendClientMessage(playerid, COLOR_GRAD1, "Coming soon (Hoang_Khang)");
+				case 1: { // store
+					new slot = GetPVarInt(playerid, "InvWepSlot");
+                    PlayerStoreWeapon(playerid, PInventory[playerid][E_INV_WEP][slot]);
 				}
 				case 2: { // sell
                     if(PInventory[playerid][E_INV_WEP][slot] == 0) {
@@ -1363,10 +1364,9 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(!response) return 1;
 			if(listitem == INV_MAX_WEAPON_AMOUNT) {
 				for(new i = 0; i < 5; i++) {
-					if(PInventory[playerid][E_INV_WEP][i] == 0) break;
-					if(PInventory[playerid][E_INV_WEP_ISUSE][i] == 0) break;
-					PInventory[playerid][E_INV_WEP_ISUSE][i] = 0;
-					RemovePlayerWeapon(playerid, PInventory[playerid][E_INV_WEP][i]);
+					if(PInventory[playerid][E_INV_WEP][i] == 0) continue;
+					if(PInventory[playerid][E_INV_WEP_ISUSE][i] == 0) continue;
+					PlayerStoreWeapon(playerid, PInventory[playerid][E_INV_WEP][i]);
 				}
 			}
 			else {
