@@ -1382,8 +1382,6 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			Inv_StartTrade(playerid, 0);
 		}
 		case INV_WEAPONS: {
-			if(!response) return Show_Inventory(playerid);
-
 			Show_InventoryWeapons(playerid, listitem);
 		}
 		case INV_GENERAL1: {
