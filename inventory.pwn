@@ -242,7 +242,10 @@ Show_InventoryWeapons(playerid, type = 0) {
 					(PInventory[playerid][E_INV_WEP_ISUSE][i] == 0) ? ("{d10000}Da cat") : ("{00d123}Dang su dung"));
 				}
                 else format(szDialog, sizeof szDialog, "%sTrong\n", szDialog);
-            }
+				if(i == INV_MAX_WEAPON_AMOUNT-1) {
+					strcat(szDialog, "Cat het sung vao");
+				}
+			}
             ShowPlayerDialog(playerid, INV_WEP, DIALOG_STYLE_TABLIST_HEADERS, "Tui Do Vu khi", szDialog, "Chon", "Huy");
         }
         case 1: { // magazines
@@ -1358,9 +1361,18 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		}
 		case INV_WEP: {
 			if(!response) return 1;
-
-			SetPVarInt(playerid, "InvWepSlot", listitem);
-			ShowPlayerDialog(playerid, INV_WEP_INTERACT, DIALOG_STYLE_LIST, "Tui Do Vu Khi", "Su dung\nCat\nGiao dich", "Chon", "Dong");
+			if(listitem == INV_MAX_WEAPON_AMOUNT) {
+				for(new i = 0; i < 5; i++) {
+					if(PInventory[playerid][E_INV_WEP][i] == 0) break;
+					if(PInventory[playerid][E_INV_WEP_ISUSE][i] == 0) break;
+					PInventory[playerid][E_INV_WEP_ISUSE][i] = 0;
+					RemovePlayerWeapon(playerid, PInventory[playerid][E_INV_WEP][i]);
+				}
+			}
+			else {
+				SetPVarInt(playerid, "InvWepSlot", listitem);
+				ShowPlayerDialog(playerid, INV_WEP_INTERACT, DIALOG_STYLE_LIST, "Tui Do Vu Khi", "Su dung\nCat\nGiao dich", "Chon", "Dong");
+			}
 		}
 		case INV_SELL_MAGAZINE: {
 			if(!response) return 1;
@@ -1454,7 +1466,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			switch(listitem) {
 				case 0: {
 					if(PlayerInfo[playerid][pBanhMi] == 0) return SendClientMessage(playerid, COLOR_GREY, "Ban khong co banh mi nao trong tui do.");
-					else if(PlayerInfo[playerid][pHunger] == 100) return SendClientMessage(playerid, COLOR_GREY, "Hien tai ban khong cam thay doi bung.");
+					else if(PlayerInfo[playerid][pDoiBung] == 100) return SendClientMessage(playerid, COLOR_GREY, "Hien tai ban khong cam thay doi bung.");
 					format(string, sizeof(string), "{FF8000}*{C2A2DA} %s da an mot o banh mi.", GetPlayerNameEx(playerid));
 					SetPlayerChatBubble(playerid,string,COLOR_PURPLE,10.0,4000);
 					PlayerInfo[playerid][pBanhMi] -= 1;
