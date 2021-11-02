@@ -1344,7 +1344,6 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     DeletePVar(playerid, "InvWepSlot");
 				}
 				case 1: { // store
-					new slot = GetPVarInt(playerid, "InvWepSlot");
                     PlayerStoreWeapon(playerid, PInventory[playerid][E_INV_WEP][slot]);
 				}
 				case 2: { // sell
